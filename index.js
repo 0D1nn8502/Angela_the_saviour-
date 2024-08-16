@@ -49,13 +49,17 @@ app.get("/", async (req, res) => {
 
 app.post("/add", async (req, res) => {
 
-  const ans = req.body.text; 
+  const ans = req.body["country"];
+  console.log(ans);  
 
   const response1 = await client.query("SELECT country_code FROM country_codes WHERE country_name = $1", [ans]);
   console.log(response1);  
 
   if (response1.rows.length != 0){
-    await client.query("INSERT INTO travelogue (country_codes) VALUES ($1)", [response1]); 
+
+    const count_code = response1.rows[0].country_code; //always log response 
+
+    await client.query("INSERT INTO travelogue (country_codes) VALUES ($1)", [count_code]); 
     res.redirect("/"); 
 
   } else {console.log("Invalid country name")}; 
